@@ -27,4 +27,15 @@ describe "#sort" do
     a.should == []
   end
 
+  it "sorts an array but accepts a block" do
+    a = bubble_sort_by(["hi","hello","hey"]) do |left,right|
+      left.length - right.length
+    end
+    a.should == ["hi", "hey", "hello"]
+  end
+
 end
+
+
+
+
