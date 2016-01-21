@@ -3,10 +3,10 @@ require "./enumerable_methods"
 describe Enumerable do 
   include Enumerable
 
-  let(:base_array) {[9, 4, 3, 2, 7, 4, 4]}
-  let(:empty_array) {[]}
-  let(:with_nil_array) {[9, nil, 6, 5]}
-  let(:all_false) {[nil, false, nil, false]}
+  subject(:base_array) {[9, 4, 3, 2, 7, 4, 4]}
+  subject(:empty_array) {[]}
+  subject(:with_nil_array) {[9, nil, 6, 5]}
+  subject(:all_false) {[nil, false, nil, false]}
 
   describe "#my_each" do
 
