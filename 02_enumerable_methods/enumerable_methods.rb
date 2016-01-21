@@ -1,45 +1,36 @@
 module Enumerable
 
   def my_each
-    if block_given?
-      for i in self
-        yield(i)
-      end
-    else
-     "<Enumerator: #{self}:my_each>" #It should be an Enumerator :-/
+    return enum_for(:my_each) unless block_given?
+    for item in self
+      yield(item)
     end
   end
 
   def my_each_with_index
+    return enum_for(:my_each_with_index) unless block_given?
     index = 0
-    if block_given?
-      for item in self
-        yield(item, index)
-        index += 1
-      end
-    else
-      "<Enumerator: #{self}:my_each_with_index>" #It should be an Enumerator :-/
+    for item in self
+      yield(item, index)
+      index += 1
     end
   end
 
   def my_select
+    return enum_for(:my_select) unless block_given?
     new_array = []
-    if block_given?
-      for i in self
-        new_array << i if yield(i)
-      end
-    else
-      "<Enumerator: #{self}:my_select>" #It should be an Enumerator :-/
+    for item in self
+      new_array << item if yield(item)
     end
     new_array
   end
 
   def my_all?
+    result = true
     if block_given?
-      result = true
-      self.my_each { |item| result = false unless yield(item) }  	
+      self.my_each { |item| result = false unless yield(item) }   
     else
-      self.my_each { |item| result = false if item }
+      self.my_each { |item| result = false unless item }
     end
     result
   end
@@ -55,34 +46,34 @@ module Enumerable
   end
 
   def my_none?
-  	result = true
-  	if block_given?
-  	  self.my_each { |item| result = false if yield(item) }
-  	else
-      self.my_each { |item| result = false if item }
-  	end
-  	result
-  end
-
-  def my_count(arg = nil)
-  	result = 0
+    result = true
     if block_given?
-      self.my_each { |item| result += 1 if yield(item) }
-    elsif arg != nil
-      self.my_each { |item| result += 1 if arg == item }
+      self.my_each { |item| result = false if yield(item) }
     else
-      self.my_each { result += 1 }
+      self.my_each { |item| result = false if item }
     end
     result
   end
 
-  def my_map(&block)
-    new_array = []
+  def my_count(*arg)
+    return self.size unless block_given? || arg != []
+    count = 0
     if block_given?
-      self.my_each { |item| new_array << block.call(item) }
+      for i in 0...self.size
+        count += 1 if yield(self[i])
+      end
     else
-      "<Enumerator: #{self}:my_map>" #It should be an Enumerator :-/
+      for i in 0...self.size
+        count += 1 if arg[0] == self[i]
+      end
     end
+    count
+  end
+
+  def my_map(&block)
+    return enum_for(:my_map) unless block_given?
+    new_array = []
+    self.my_each { |item| new_array << block.call(item) }
     new_array
   end
 
